@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.julioosilva97.orangetest.api.dto.VaccineInput;
+
 @Entity
 public class Vaccine {
 
@@ -67,6 +69,13 @@ public class Vaccine {
 		this.name = name;
 		this.date = date;
 		this.user = user;
+	}
+	
+	public Vaccine toModel(VaccineInput vaccineInput) {
+		name = vaccineInput.getName();
+		date = vaccineInput.getDate();
+		
+		return this;
 	}
 
 }

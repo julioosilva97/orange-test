@@ -1,5 +1,6 @@
 package com.julioosilva97.orangetest.api.controller;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +11,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.julioosilva97.orangetest.api.dto.UserInput;
+import com.julioosilva97.orangetest.api.dto.VaccineInput;
 import com.julioosilva97.orangetest.model.entities.User;
-import com.julioosilva97.orangetest.model.exception.UniqueException;
+import com.julioosilva97.orangetest.model.entities.Vaccine;
 import com.julioosilva97.orangetest.model.repository.UserRepository;
+import com.julioosilva97.orangetest.model.repository.VaccineRepository;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
-
+@RequestMapping("/vaccines")
+public class VaccineController {
+	
+	@Autowired
+	private VaccineRepository vaccineRepository;
+	
 	@Autowired
 	private UserRepository userRepository;
-
+	
 	@PostMapping
-	public ResponseEntity<Void> save(@Valid @RequestBody UserInput userInput) {
+	public ResponseEntity<Void> save(@Valid @RequestBody VaccineInput vaccineInput ){
 		
-		userRepository.findByEmail(userInput.getEmail()).ifPresent( u -> {throw new UniqueException("Email "+userInput.getEmail()+" já existe");} );;
+		User user = userRepository.findByEmail(vaccineInput.getUserEmail()).orElseThrow(() ->  new EntityNotFoundException("Email não cadastrado"));
 		
-		userRepository.findByCpf(userInput.getCpf()).ifPresent( u -> {throw new UniqueException("Cpf "+userInput.getCpf()+" já existe");} );;
-
-		userRepository.save(new User().toModel(userInput));
-
+		Vaccine vaccine = new Vaccine().toModel(vaccineInput);
+		vaccine.setUser(user);
+		
+		vaccineRepository.save(vaccine);
+		
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
