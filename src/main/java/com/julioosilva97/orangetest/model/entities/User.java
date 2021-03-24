@@ -25,10 +25,10 @@ public class User implements Serializable {
 	@Column(nullable = false, length = 150)
 	private String name;
 
-	@Column(nullable = false, length = 150)
+	@Column(nullable = false, length = 150,unique = true)
 	private String email;
 
-	@Column(nullable = false, length = 11)
+	@Column(nullable = false, length = 11,unique = true)
 	private String cpf;
 
 	@Column(name = "birth_date")
@@ -89,7 +89,7 @@ public class User implements Serializable {
 		
 		name = user.getName();
 		email = user.getEmail();
-		cpf = user.getCpf();
+		cpf = user.getCpf().trim().replace(".", "").replace("-", "");
 		birthDate = user.getBirthDate();
 		
 		return this;
