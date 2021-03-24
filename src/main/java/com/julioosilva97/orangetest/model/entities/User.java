@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.julioosilva97.orangetest.api.dto.UserInput;
+
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
@@ -81,5 +83,15 @@ public class User implements Serializable {
 		this.email = email;
 		this.cpf = cpf;
 		this.birthDate = birthDate;
+	}
+	
+	public User toModel(UserInput user) {
+		
+		name = user.getName();
+		email = user.getEmail();
+		cpf = user.getCpf();
+		birthDate = user.getBirthDate();
+		
+		return this;
 	}
 }
